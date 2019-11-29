@@ -238,7 +238,7 @@ class  Filters extends React.Component
         
             getVis()
             {   
-                console.log('http://127.0.0.1:5000/process/' + 
+                console.log('http://18.191.146.199:80/process/' + 
                 this.state.username + "+" +
                 this.state.P + "+" +
                 this.state.H + "+" +
@@ -252,7 +252,7 @@ class  Filters extends React.Component
                 this.state.T + "+" +
                 this.state.F)
     
-                fetch('http://127.0.0.1:5000/process/' + 
+                fetch('http://18.191.146.199:80/process/' + 
                 this.state.username + "+" +
                 this.state.P + "+" +
                 this.state.H + "+" +
@@ -298,7 +298,7 @@ class  Filters extends React.Component
         }
         getVal()
         {   
-            console.log('http://127.0.0.1:5000/about/' + 
+            console.log('http://18.191.146.199:80/about/' + 
             this.state.username + "+" +
             this.state.P + "+" +
             this.state.H + "+" +
@@ -312,7 +312,7 @@ class  Filters extends React.Component
             this.state.T + "+" +
             this.state.F)
 
-            fetch('http://127.0.0.1:5000/about/' + 
+            fetch('http://18.191.146.199:80/about/' + 
             this.state.username + "+" +
             this.state.P + "+" +
             this.state.H + "+" +
