@@ -3,49 +3,20 @@ import { Modal,Button,Container,Row,Col } from 'react-bootstrap';
 import { Chart } from "react-google-charts";
 import { ClipLoader } from 'react-spinners';
 import { css } from '@emotion/core';
-
+import Truncate from 'react-truncate';
 
 const override = css`
     display: block;
     margin: 0 auto;
     border-color: green;
 `;
-const circle1 = {
-    width: '50px',
-    height: '50px',
-    webkitborderradius: '25px',
-    mozborderradius: '5px',
-    borderradius: '25px',
-    background: 'green',
-    display: 'inline-block',
-    margin: '20px'
-  }
+
   const load = {
     color: 'green',
     display: 'center'
     
   }
-
-  const circle2 = {
-    width: '50px',
-    height: '50px',
-    webkitborderradius: '25px',
-    mozborderradius: '5px',
-    borderradius: '25px',
-    background: 'yellow',
-    display: 'inline-block',
-    margin: '20px'
-  }
-  const circle3 = {
-    width: '50px',
-    height: '50px',
-    webkitborderradius: '25px',
-    mozborderradius: '5px',
-    borderradius: '25px',
-    background: 'red',
-    display: 'inline-block',
-    margin: '20px'
-  }
+  
 const outer =
 {
     width:'100%',
@@ -66,8 +37,8 @@ const divStyle = {
     width: '250px',
     height: '350px',
     borderStyle: 'solid',
-    borderColor: 'coral'
-  };
+    borderColor: 'darkblue',   
+   };
 
 const bodyStyle = {
   maxWidth: '250px',
@@ -77,8 +48,8 @@ const bodyStyle = {
 };
 
 const imageStyle = {
-  width: '100px', 
-  height : '100px',
+  width: '75px', 
+  height : '75px',
   display: 'inline-block',
   margin: '20px'
 };
@@ -105,9 +76,14 @@ class  Filters extends React.Component
           Pl : false,
           tweet:[],
           show: false,
+          shownh:false,
           static: false,
           loading: false,
           afterload: false,
+          No_of_Tweets: 0,
+          QTime:0,
+          IsHashTags: 0,
+          color: "red",
           visdata :[],
           StaticVisualData : [ {"Country1":"India","Country1_val":56500,"Country2":"USA","Country2_val":42498,"Country3":"Brazil","Country3_val":46044,"Hash1":"nancy","Hash10":"modi","Hash10_val":6626,"Hash1_val":9816,"Hash2":"congress","Hash2_val":5692,"Hash3":"momoland","Hash3_val":5364,"Hash4":"모모랜드","Hash4_val":5028,"Hash5":"낸시","Hash5_val":4777,"Hash6":"donaldtrump","Hash6_val":4506,"Hash7":"lula","Hash7_val":4487,"Hash8":"marina","Hash8_val":3944,"Hash9":"그루","Hash9_val":6912,"NV":46185,"V":98857,"lang1":"English","lang1_val":69411,"lang2":"Hindi","lang2_val":17213,"lang3":"Portuguese","lang3_val":27947,"lang4":"Urdu","lang4_val":5608,"lang5":"Spanish","lang5_val":6878}]
     
@@ -139,9 +115,7 @@ class  Filters extends React.Component
                 this.setState({ afterload:false});
                 this.setState({ show: true });
                 this.setState({ afterload:false}); //After 1 second, set render to true
-            }.bind(this), 10000)
-            
-            
+            }.bind(this), 3000)     
 
             
           };
@@ -171,13 +145,10 @@ class  Filters extends React.Component
             var x5 = document.forms["searchform"]["i"].checked;
             var x6 = document.forms["searchform"]["u"].checked;
             var x7 = document.forms["searchform"]["b"].checked;
-            var x8 = document.forms["searchform"]["pl"].checked;
-            var x9 = document.forms["searchform"]["s"].checked;
-            var x10 = document.forms["searchform"]["en"].checked;
             var x11 = document.forms["searchform"]["t"].checked;
             var x12 = document.forms["searchform"]["f"].checked;
 
-            if (!(x1 != "" || x2 || x3 || x4 || x5 || x6 || x7 || x8 || x9 || x10 || x11 || x12 )) {
+            if (!(x1 != "" || x2 || x3 || x4 || x5 || x6 || x7 || x11 || x12 )) {
               alert("Please fill out the atleast one field");
               return false;
             }
@@ -277,8 +248,8 @@ class  Filters extends React.Component
                   .then(response => {
                       console.log(response)
                       this.setState({visdata : response.docs})
+                      this.setState({IsHashTags: response.docs[0].Hashtag_present })
                   })    
-                  
                   
                   
                    
@@ -336,7 +307,13 @@ class  Filters extends React.Component
               .then(response => response.json())
               .then(response => {
                   console.log(response)
-                  this.setState({tweet : response.response.docs})
+                  this.setState({tweet : response.response.docs},
+                  this.setState({No_of_Tweets: response.response.numFound }),
+                  this.setState({QTime: response.responseHeader.QTime }),
+                  console.log(response.QTime),
+                  console.log(this.state.QTime)
+                    
+                  )
               })     
               
                
@@ -422,21 +399,7 @@ class  Filters extends React.Component
     </div>
     </div>
     
-    <div class="col-sm">
-    <div class="checkbox">
-    <h3>Topics </h3>
-    <label>
-    <input name ="s" type="checkbox" value="" onChange = { this.SpoUpdateInput} /> Sports</label>
-    </div>
-    <div class="checkbox">
-    <label>
-    <input name ="pl" type="checkbox" value=""  onChange = { this.PolUpdateInput} /> Politics</label>
-    </div>
-    <div  class="checkbox disabled">
-    <label>
-    <input  name ="en" type="checkbox" value=""  onChange = { this.EntUpdateInput} /> Environment</label>
-    </div>
-    </div>
+    
     
     <div class="col-sm">   
     <div class="checkbox">
@@ -456,7 +419,7 @@ class  Filters extends React.Component
     </form>
     </div>
     </div>
-    <div class="mt-4 ">
+    <div class="mt-4 " >
     <div class="form-row text-center">
         <div class="col-12">
             
@@ -473,8 +436,7 @@ class  Filters extends React.Component
                     Corpus Analytics
             </button>
             </div>
-            </div>
-            
+            </div>   
             
            
   
@@ -527,13 +489,17 @@ class  Filters extends React.Component
         <div   >
         <Container>
           
-        <Row className="show-grid">
-            <Col xs={6} md={4}>
+        <h6> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+          LANGUAGE DISTRIBUTION ACCROSS TWEETS</h6>
+        <Row className="show-grid" style={{display: 'flex', justifyContent: 'center'}}>
+            
             {
             this.state.visdata.map( (lang , i ) =>            
             <Chart
-           width={'250px'}
-           height={'250px'}
+           width={'500px'}
+           height={'300px'}
            chartType="PieChart"
            loader={<div>Loading Chart</div>}
            data={[
@@ -545,7 +511,8 @@ class  Filters extends React.Component
              [lang.lang5, lang.lang5_val],
            ]}
            options={{
-             title: 'Language Distribution across the Tweets',
+            
+             fontsize: '0.5px',
              // Just add this option
              is3D: true,
            }}
@@ -554,13 +521,17 @@ class  Filters extends React.Component
             )
             
         } 
-            </Col>
-            <Col xs={6} md={4}>
+            </Row>
+            <h6> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+          SENTIMENTAL ANALYSIS ACCROSS THE TWEETS</h6>
+            <Row className="show-grid" style={{display: 'flex', justifyContent: 'center'}}>
             {            
             this.state.visdata.map( (lang , i ) =>            
             <Chart
-           width={'250px'}
-           height={'250px'}
+           width={'500px'}
+           height={'300px'}
            chartType="PieChart"
            loader={<div>Loading Chart</div>}
            data={[
@@ -571,7 +542,7 @@ class  Filters extends React.Component
             
            ]}
            options={{
-             title: 'Sentimental Analysis across the Tweets',
+             
              // Just add this option
              is3D: true,
            }}
@@ -580,14 +551,18 @@ class  Filters extends React.Component
             )
             
         }
-            </Col>
+            </Row>
+            <h6> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+          VERIFIED AND NON VERIFIED USERS</h6>
            
-          <Col xs={6} md={4}>
+            <Row className="show-grid" style={{display: 'flex', justifyContent: 'center'}}>
             {
             this.state.visdata.map( (TypeofUsers , i ) =>            
             <Chart
-           width={'250px'}
-           height={'250px'}
+           width={'500px'}
+           height={'300px'}
            chartType="PieChart"
            loader={<div>Loading Chart</div>}
            data={[
@@ -597,8 +572,8 @@ class  Filters extends React.Component
              
            ]}
            options={{
-             title: 'Verified vs Non Verified  Users',
-             // Just add this option
+             
+            
              is3D: true,
            }}
            rootProps={{ 'data-testid': '2' }}
@@ -606,41 +581,60 @@ class  Filters extends React.Component
             )
             
         } 
-           </Col>
+          
            </Row>
-
-          <Row className="show-grid">
-          {            
-            this.state.visdata.map( (hashtags , i ) => 
-            <Chart
-          chartType="ColumnChart"
-          loader={<div>Loading Chart</div>}
-          width="100%"
-          height="300px"
-          data={[
-            ["Element", "Hashtag Count", { role: "style" }],
-            [hashtags.Hash1, hashtags.Hash1_val, "#b87333"], // RGB value
-            [hashtags.Hash2, hashtags.Hash2_val, "silver"], // English color name
-            [hashtags.Hash3, hashtags.Hash3_val, "gold"],
-            [hashtags.Hash4, hashtags.Hash4_val, "black"], // CSS-style declaration
-            [hashtags.Hash5, hashtags.Hash5_val, "red"], 
-            [hashtags.Hash6, hashtags.Hash6_val, "#b87333"], 
-            [hashtags.Hash7, hashtags.Hash7_val, "green"], 
-            [hashtags.Hash8, hashtags.Hash8_val, "blue"], 
-            [hashtags.Hash9, hashtags.Hash9_val, "lightblue"], 
-            [hashtags.Hash10, hashtags.Hash10_val, "grey"]
-
-          ]}
-          options={{
-            title: 'Trending #Hashtags',
+           
+           <br></br><br></br>
+          <h6> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             
-          }}
-        />
-            )
+            TRENDING HASHTAGS</h6>
+         
+           <row xs={12} md={12}>
+            {      <div>{
+                  this.state.IsHashTags ? (this.state.visdata.map( (hashtags , i ) => 
+                  <Chart
+                chartType="ColumnChart"
+                loader={<div>Loading Chart</div>}
+                width="100%"
+                height="300px"
+                data={[
+                  ["Element", "Hashtag Count", { role: "style" }],
+                  [hashtags.Hash1, hashtags.Hash1_val, "#b87333"], // RGB value
+                  [hashtags.Hash2, hashtags.Hash2_val, "silver"], // English color name
+                  [hashtags.Hash3, hashtags.Hash3_val, "gold"],
+                  [hashtags.Hash4, hashtags.Hash4_val, "black"], // CSS-style declaration
+                  [hashtags.Hash5, hashtags.Hash5_val, "red"], 
+                  [hashtags.Hash6, hashtags.Hash6_val, "#b87333"], 
+                  [hashtags.Hash7, hashtags.Hash7_val, "green"], 
+                  [hashtags.Hash8, hashtags.Hash8_val, "blue"], 
+                  [hashtags.Hash9, hashtags.Hash9_val, "lightblue"], 
+                  [hashtags.Hash10, hashtags.Hash10_val, "grey"]
+      
+                ]}
+                options={{
+                 
+                  
+                }}
+              />)) : (<h6 style={{ color : 'red', align: 'center'}}>  &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NO HASHTAGS FOUND FOR THIS QUERY</h6>
+            
+              )
+            }</div>
         }
-          </Row>
+        
+            </row>
+        
 
-          <Row className="show-grid">
+          
+          
+          <br></br><br></br>
+          <h6> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+            GEO TAGGING OF RETRIEVED TWEETS</h6>
+         
+          <Row className="show-grid"> 
+          &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
           {            
             this.state.visdata.map( (Countries , i ) => 
             <Chart
@@ -648,7 +642,7 @@ class  Filters extends React.Component
             height={'300px'}
             chartType="GeoChart"
             options={{
-                title: 'Geo Tagging of Tweets'                
+                title: 'Geo Tagging of Tweets',            
               }}
             data={[
                 ['Country', 'Popularity'],
@@ -696,7 +690,11 @@ class  Filters extends React.Component
         <Modal.Body>
         <Container>
           
-            <row xs={12} md={12}>
+        <h6> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+          LANGUAGE DISTRIBUTION ACCROSS TWEETS</h6>
+            <row xs={12} md={12} style={{display: 'flex', justifyContent: 'center'}}>
                 {            
             this.state.StaticVisualData.map( (lang , i ) =>            
             <Chart
@@ -713,7 +711,7 @@ class  Filters extends React.Component
              [lang.lang5, lang.lang5_val],
            ]}
            options={{
-             title: 'Language Distribution across the Tweets',
+             
              // Just add this option
              is3D: true,
            }}
@@ -724,6 +722,10 @@ class  Filters extends React.Component
         }
             </row>
             
+            <h6> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+            TRENDING HASHTAGS</h6>
             <row xs={12} md={12}>
             {            
             this.state.StaticVisualData.map( (hashtags , i ) => 
@@ -747,7 +749,6 @@ class  Filters extends React.Component
 
           ]}
           options={{
-            title: 'Trending #Hashtags',
             
           }}
         />
@@ -757,14 +758,18 @@ class  Filters extends React.Component
             </row>
           
 
-         
+            <br></br><br></br>
+            <h6> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+          VERIFIED AND NON-VERIFIED USERS</h6>
             <row xs={12} md={12}>
 
             {            
             this.state.StaticVisualData.map( (TypeofUsers , i ) => 
             <Chart
   width={'500px'}
-  height={'300px'}
+  height={'200px'}
   chartType="BarChart"
   loader={<div>Loading Chart</div>}
   data={[
@@ -785,7 +790,7 @@ class  Filters extends React.Component
    
   ]}
   options={{
-    title: 'Verified and Non Verified Users',
+   
     width: 600,
     height: 200,
     bar: { groupWidth: '95%' },
@@ -797,7 +802,15 @@ class  Filters extends React.Component
             )
 }
             </row> 
-            <row xs={12} md={12}>
+            
+          <h6> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+            GEO TAGGING OF RETRIEVED TWEETS</h6>
+         
+          <Row className="show-grid"> 
+          &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+            
                 
             {            
             this.state.StaticVisualData.map( (Countries , i ) => 
@@ -822,8 +835,8 @@ class  Filters extends React.Component
             rootProps={{ 'data-testid': '1' }}
             />
             )}
-            </row>           
-          
+            </Row>           
+            
         </Container>
           
         </Modal.Body>
@@ -841,9 +854,10 @@ class  Filters extends React.Component
 
 
     <div >
-
+          <h5 style={{ color: "black" }}> &nbsp;&nbsp; Tweets Retrieved: <font color="green"> { this.state.No_of_Tweets }</font> in <font color="green">{this.state.QTime}</font> secs.</h5>
+            <br></br>
     <div class="container" >
-    <div class="row">    
+    <div class="row" >    
 {
             this.state.tweet.map( Tweet=>
                
@@ -852,17 +866,26 @@ class  Filters extends React.Component
            
            <div style={outer}> 
            <img  src= { Tweet["user.profile_image_url"]} class="card-img-top" alt="..."  style ={imageStyle}></img>
-           <blink><p style ={inner}> {Tweet.setiment}</p></blink>
+
+           <b><font size="2" style ={{ display: 'inline-block',
+    margin: '16px', color: (() => {
+      switch (Tweet.setiment) {
+        case "POSTITIVE": return "#008000";
+        case "NEGATIVE": return "#FF6347";
+        case "NEUTRAL":  return "#0000FF";
+        default:      return "black";
+      }
+    })()}}   id="demo"> {Tweet.setiment}</font>    </b>
             
 
            </div>
-
-           <div class="card-body" style={bodyStyle} >
-             <h5 class="card-title">  {Tweet["user.name"]} </h5>  
-             <p class="card-text" > { Tweet.full_text}.</p>
+           <font size="1" color="green"> &nbsp;&nbsp;&nbsp;<b>Date:</b> {Tweet.created_at} </font>
+           <div class="card-body" style={bodyStyle} >              
+             <h5 class="card-title"> {Tweet["user.name"]}  </h5>  
+             <p class="card-text" style={{ size: "2px"}}  ><Truncate lines={2} > { Tweet.full_text}</Truncate></p>
            </div>
             <div class ="card-body" align="center">
-                <a href= { "https://twitter.com/" + Tweet.poi_name + "/status/" + Tweet.id  } class="btn btn-primary">Jump to Twitter! </a>
+                <a href= { "https://twitter.com/" + Tweet.poi_name + "/status/" + Tweet.id  } class="btn btn-primary" target="_blank">View in Twitter! </a>
             </div>
             </div>
             <br></br>
@@ -882,6 +905,7 @@ class  Filters extends React.Component
 }
 
 export default Filters;
+
 
 
 

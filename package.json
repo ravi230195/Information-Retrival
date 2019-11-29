@@ -17,7 +17,8 @@
     "react-redux-loading-bar": "^4.5.0",
     "react-scripts": "3.2.0",
     "react-spinners": "^0.6.1",
-    "react-tabs": "^3.0.0"
+    "react-tabs": "^3.0.0",
+    "react-truncate": "^2.4.0"
   },
   "scripts": {
     "start": "node ./node_modules/react-scripts/bin/react-scripts.js start",
@@ -28,7 +29,6 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "http://localhost:5000",
   "browserslist": {
     "production": [
       ">0.2%",
