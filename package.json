@@ -1,0 +1,44 @@
+{
+  "name": "tweetdisplay",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.6.1",
+    "@material-ui/icons": "^4.5.1",
+    "bootstrap": "^4.3.1",
+    "react": "^16.12.0",
+    "react-bootstrap": "^1.0.0-beta.16",
+    "react-cool-tabs": "^1.1.6",
+    "react-dom": "^16.12.0",
+    "react-google-charts": "^3.0.15",
+    "react-loading-bar": "0.0.7",
+    "react-minimal-pie-chart": "^5.0.2",
+    "react-native": "^0.61.5",
+    "react-redux-loading-bar": "^4.5.0",
+    "react-scripts": "3.2.0",
+    "react-spinners": "^0.6.1",
+    "react-tabs": "^3.0.0"
+  },
+  "scripts": {
+    "start": "node ./node_modules/react-scripts/bin/react-scripts.js start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "proxy": "http://localhost:5000",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

@@ -1,0 +1,889 @@
+import React  from 'react';
+import { Modal,Button,Container,Row,Col } from 'react-bootstrap';
+import { Chart } from "react-google-charts";
+import { ClipLoader } from 'react-spinners';
+import { css } from '@emotion/core';
+
+
+const override = css`
+    display: block;
+    margin: 0 auto;
+    border-color: green;
+`;
+const circle1 = {
+    width: '50px',
+    height: '50px',
+    webkitborderradius: '25px',
+    mozborderradius: '5px',
+    borderradius: '25px',
+    background: 'green',
+    display: 'inline-block',
+    margin: '20px'
+  }
+  const load = {
+    color: 'green',
+    display: 'center'
+    
+  }
+
+  const circle2 = {
+    width: '50px',
+    height: '50px',
+    webkitborderradius: '25px',
+    mozborderradius: '5px',
+    borderradius: '25px',
+    background: 'yellow',
+    display: 'inline-block',
+    margin: '20px'
+  }
+  const circle3 = {
+    width: '50px',
+    height: '50px',
+    webkitborderradius: '25px',
+    mozborderradius: '5px',
+    borderradius: '25px',
+    background: 'red',
+    display: 'inline-block',
+    margin: '20px'
+  }
+const outer =
+{
+    width:'100%',
+    
+}
+const inner =
+{
+    display: 'inline-block',
+    margin: '16px'
+}
+const piechart = {
+    height : '150px',
+    width : '150px'
+};
+
+
+const divStyle = {
+    width: '250px',
+    height: '350px',
+    borderStyle: 'solid',
+    borderColor: 'coral'
+  };
+
+const bodyStyle = {
+  maxWidth: '250px',
+  maxHeight: '250px',
+  overflow: 'hidden',
+  color: 'black'  
+};
+
+const imageStyle = {
+  width: '100px', 
+  height : '100px',
+  display: 'inline-block',
+  margin: '20px'
+};
+  
+
+class  Filters extends React.Component
+{
+    
+    constructor(props){
+        super(props);      
+        
+        this.state = {
+          username : "",
+          E : false,
+          P : false,
+          H : false,
+          I : false,
+          U : false,
+          B : false,
+          T : false,
+          F : false,
+          S : false,
+          En : false,
+          Pl : false,
+          tweet:[],
+          show: false,
+          static: false,
+          loading: false,
+          afterload: false,
+          visdata :[],
+          StaticVisualData : [ {"Country1":"India","Country1_val":56500,"Country2":"USA","Country2_val":42498,"Country3":"Brazil","Country3_val":46044,"Hash1":"nancy","Hash10":"modi","Hash10_val":6626,"Hash1_val":9816,"Hash2":"congress","Hash2_val":5692,"Hash3":"momoland","Hash3_val":5364,"Hash4":"모모랜드","Hash4_val":5028,"Hash5":"낸시","Hash5_val":4777,"Hash6":"donaldtrump","Hash6_val":4506,"Hash7":"lula","Hash7_val":4487,"Hash8":"marina","Hash8_val":3944,"Hash9":"그루","Hash9_val":6912,"NV":46185,"V":98857,"lang1":"English","lang1_val":69411,"lang2":"Hindi","lang2_val":17213,"lang3":"Portuguese","lang3_val":27947,"lang4":"Urdu","lang4_val":5608,"lang5":"Spanish","lang5_val":6878}]
+    
+        }       
+        
+        this.SearchUpdateInput = this.SearchUpdateInput.bind(this);       
+        this.PorUpdateInput = this.PorUpdateInput.bind(this);        
+        this.HinUpdateInput = this.HinUpdateInput.bind(this);
+        this.EngUpdateInput = this.EngUpdateInput.bind(this);
+        this.IndUpdateInput = this.IndUpdateInput.bind(this);
+        this.UsaUpdateInput = this.UsaUpdateInput.bind(this);
+        this.BraUpdateInput = this.BraUpdateInput.bind(this);
+        this.PolUpdateInput = this.PolUpdateInput.bind(this);
+        this.EntUpdateInput = this.EntUpdateInput.bind(this);
+        this.SpoUpdateInput = this.SpoUpdateInput.bind(this);
+        this.TrueUpdateInput = this.TrueUpdateInput.bind(this);
+        this.FalseUpdateInput = this.FalseUpdateInput.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        
+        }    
+       
+        showModal = () => {
+            this.setState({ afterload: true });
+
+            this.setState({ loading: true });
+
+            setTimeout(function() { //Start the timer
+                this.setState({ loading: false });
+                this.setState({ afterload:false});
+                this.setState({ show: true });
+                this.setState({ afterload:false}); //After 1 second, set render to true
+            }.bind(this), 10000)
+            
+            
+
+            
+          };
+        
+        hideModal = () => {
+            this.setState({ Visdata: []})
+            this.setState({ show: false });
+           
+          };
+
+          showStaticModal = () => {
+            this.setState({ static: true });
+            
+          };
+        
+        hideStaticModal = () => {
+            
+            this.setState({ static: false });
+           
+          };
+
+        validateForm() {
+            var x1 = document.forms["searchform"]["searchkeyword"].value;
+            var x2 = document.forms["searchform"]["e"].checked;
+            var x3 = document.forms["searchform"]["h"].checked;
+            var x4 = document.forms["searchform"]["p"].checked;
+            var x5 = document.forms["searchform"]["i"].checked;
+            var x6 = document.forms["searchform"]["u"].checked;
+            var x7 = document.forms["searchform"]["b"].checked;
+            var x8 = document.forms["searchform"]["pl"].checked;
+            var x9 = document.forms["searchform"]["s"].checked;
+            var x10 = document.forms["searchform"]["en"].checked;
+            var x11 = document.forms["searchform"]["t"].checked;
+            var x12 = document.forms["searchform"]["f"].checked;
+
+            if (!(x1 != "" || x2 || x3 || x4 || x5 || x6 || x7 || x8 || x9 || x10 || x11 || x12 )) {
+              alert("Please fill out the atleast one field");
+              return false;
+            }
+            return true;
+          }
+
+
+        SearchUpdateInput(event){
+
+            this.setState({ username : event.target.value})
+        }
+        
+        PorUpdateInput(event){
+            this.setState({ P : event.target.checked})     
+
+         }
+            
+        HinUpdateInput(event){
+            this.setState({H : event.target.checked})
+            }
+
+        EngUpdateInput(event){
+            this.setState({E : event.target.checked})
+            }
+
+        UsaUpdateInput(event){
+            this.setState({U : event.target.checked})
+            }
+
+
+        BraUpdateInput(event){
+            this.setState({B : event.target.checked})
+            }
+
+        IndUpdateInput(event){
+            this.setState({I : event.target.checked})
+            }
+
+        PolUpdateInput(event){
+            this.setState({Pl : event.target.checked})
+            }
+
+        SpoUpdateInput(event){
+            this.setState({S : event.target.checked})
+            }
+
+        EntUpdateInput(event){
+            this.setState({En : event.target.checked})
+            }
+
+        TrueUpdateInput(event){
+            this.setState({T : event.target.checked})
+            }
+
+        FalseUpdateInput(event){
+            this.setState({F : event.target.checked})
+            }     
+        
+            getVis()
+            {   
+                console.log('http://127.0.0.1:5000/process/' + 
+                this.state.username + "+" +
+                this.state.P + "+" +
+                this.state.H + "+" +
+                this.state.E + "+" +
+                this.state.U + "+" +
+                this.state.B + "+" +
+                this.state.I+ "+" +
+                this.state.Pl+ "+" +
+                this.state.S + "+" +
+                this.state.En + "+" +
+                this.state.T + "+" +
+                this.state.F)
+    
+                fetch('http://127.0.0.1:5000/process/' + 
+                this.state.username + "+" +
+                this.state.P + "+" +
+                this.state.H + "+" +
+                this.state.E + "+" +
+                this.state.U + "+" +
+                this.state.B + "+" +
+                this.state.I+ "+" +
+                this.state.Pl+ "+" +
+                this.state.S + "+" +
+                this.state.En + "+" +
+                this.state.T + "+" +
+                this.state.F
+                
+                ,{
+                    headers : { 
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json'
+                     }
+              
+                  })
+                  .then(response => response.json())
+                  .then(response => {
+                      console.log(response)
+                      this.setState({visdata : response.docs})
+                  })    
+                  
+                  
+                  
+                   
+            }        
+        
+        
+        Dualfunc ()
+        {
+            if(this.validateForm())
+            {
+            
+            this.getVis();
+            this.showModal();
+            
+
+            }
+        }
+        getVal()
+        {   
+            console.log('http://127.0.0.1:5000/about/' + 
+            this.state.username + "+" +
+            this.state.P + "+" +
+            this.state.H + "+" +
+            this.state.E + "+" +
+            this.state.U + "+" +
+            this.state.B + "+" +
+            this.state.I+ "+" +
+            this.state.Pl+ "+" +
+            this.state.S + "+" +
+            this.state.En + "+" +
+            this.state.T + "+" +
+            this.state.F)
+
+            fetch('http://127.0.0.1:5000/about/' + 
+            this.state.username + "+" +
+            this.state.P + "+" +
+            this.state.H + "+" +
+            this.state.E + "+" +
+            this.state.U + "+" +
+            this.state.B + "+" +
+            this.state.I+ "+" +
+            this.state.Pl+ "+" +
+            this.state.S + "+" +
+            this.state.En + "+" +
+            this.state.T + "+" +
+            this.state.F
+            
+            ,{
+                headers : { 
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                 }
+          
+              })
+              .then(response => response.json())
+              .then(response => {
+                  console.log(response)
+                  this.setState({tweet : response.response.docs})
+              })     
+              
+               
+        }        
+          
+        
+        handleSubmit(){
+        console.log('Your input value is: ' + this.state.username)
+        console.log('Your P value is: ' + this.state.P)
+        console.log('Your H value is: ' + this.state.H)
+        console.log('Your E value is: ' + this.state.E)
+        console.log('Your U value is: ' + this.state.U)
+        console.log('Your B value is: ' + this.state.B)
+        console.log('Your I value is: ' + this.state.I)
+        console.log('Your Pl value is: ' + this.state.Pl)
+        console.log('Your S value is: ' + this.state.S)
+        console.log('Your E value is: ' + this.state.E)
+        console.log('Your T value is: ' + this.state.T)
+        console.log('Your F value is: ' + this.state.F)
+        
+        if(!this.validateForm())
+        {
+            
+        }
+        this.getVal();
+        
+        }
+        
+     
+    render() {
+        
+        
+    return (
+        <div >
+        <div class="jumbotron jumbotron-fluid" style ={{ backgroundColor: 'ash', maxHeight : "400px" }} >      
+    
+    
+    <div class="form-group" >
+    <div class="container"  >
+    
+    <div class="row justify-content-center" >
+    <label for="exampleInputEmail1" > <h3> Your Search starts Here! </h3></label>
+    </div>    
+    <form name="searchform">
+    <input type="text" name="searchkeyword" class="form-control" placeholder="Search for any Keyword!" onChange = { this.SearchUpdateInput}  ></input>
+    
+    <div class="mt-2 ">
+    <div class="container" >        
+    <div class="row">
+    
+    
+    
+    <div class="col-sm">
+    <div class="checkbox">
+    <h3>Language </h3>                        
+    <label>
+    <input name ="e" type="checkbox" value="" onChange = { this.EngUpdateInput} /> English
+    </label> 
+    </div>
+    <div class="checkbox">
+    <label>
+    <input name ="h"  type="checkbox" value="" onChange = { this.HinUpdateInput} /> Hindi</label>
+    </div>
+    <div class="checkbox disabled">
+    <label>
+    <input name ="p" type="checkbox" value="" onChange = { this.PorUpdateInput} /> Portugese</label>
+    </div>
+    </div>
+    
+    <div class="col-sm">
+    <div class="checkbox">
+    <h3>Country </h3>
+    <label>
+    <input name ="i" type="checkbox" value="" onChange = { this.IndUpdateInput}/> India</label>
+    </div>
+    <div class="checkbox">
+    <label>
+    <input name ="u" type="checkbox" value="" onChange = { this.UsaUpdateInput}/> USA</label>
+    </div>
+    <div class="checkbox disabled">
+    <label>
+    <input name ="b" type="checkbox" value=""   onChange = { this.BraUpdateInput}/> Brazil</label>
+    </div>
+    </div>
+    
+    <div class="col-sm">
+    <div class="checkbox">
+    <h3>Topics </h3>
+    <label>
+    <input name ="s" type="checkbox" value="" onChange = { this.SpoUpdateInput} /> Sports</label>
+    </div>
+    <div class="checkbox">
+    <label>
+    <input name ="pl" type="checkbox" value=""  onChange = { this.PolUpdateInput} /> Politics</label>
+    </div>
+    <div  class="checkbox disabled">
+    <label>
+    <input  name ="en" type="checkbox" value=""  onChange = { this.EntUpdateInput} /> Environment</label>
+    </div>
+    </div>
+    
+    <div class="col-sm">   
+    <div class="checkbox">
+    <h3>Verified </h3>
+    <label>
+    <input name ="t" type="checkbox" value="" onChange = { this.TrueUpdateInput}/> True</label>
+    </div>    
+    <div class="checkbox">
+    <label>
+    <input name ="f" type="checkbox" value="" onChange = { this.FalseUpdateInput} /> False</label>    
+    </div>
+    </div>
+    
+    </div>
+    </div>
+    </div>
+    </form>
+    </div>
+    </div>
+    <div class="mt-4 ">
+    <div class="form-row text-center">
+        <div class="col-12">
+            
+                
+            <div style={outer}>
+            <div style={inner}><button type="button" class="btn btn-primary btn-lg"  refresh="true" onClick={ () =>this.Dualfunc() } >
+                    Query Analytics
+            </button></div>
+        <div style={inner}><button type="button"  class="btn btn-primary btn-lg"  refresh="true" onClick={() => this.handleSubmit()} >Submit!</button>
+            
+           </div> 
+        
+            <div style={inner}> <button type="button" class="btn btn-primary btn-lg"  refresh="true" onClick={ () =>this.showStaticModal() } >
+                    Corpus Analytics
+            </button>
+            </div>
+            </div>
+            
+            
+           
+  
+        <div  >
+        
+        <Modal
+        
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={this.state.afterload}
+        onHide={this.hideModal}
+      >
+         
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter" style={load}>
+            Loading Visualization........
+          </Modal.Title>
+          
+        </Modal.Header>
+        <Modal.Body>
+        <ClipLoader
+          css={override}
+          sizeUnit={"px"}
+          size={150}
+          color={'#123abc'}
+          loading={this.state.loading}
+        />
+        
+        </Modal.Body>
+        </Modal>
+        <Modal
+        
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={this.state.show}
+        onHide={this.hideModal}
+      >
+         
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Analytics and Visualization
+          </Modal.Title>
+          
+        </Modal.Header>
+        <Modal.Body>
+
+        
+        <div   >
+        <Container>
+          
+        <Row className="show-grid">
+            <Col xs={6} md={4}>
+            {
+            this.state.visdata.map( (lang , i ) =>            
+            <Chart
+           width={'250px'}
+           height={'250px'}
+           chartType="PieChart"
+           loader={<div>Loading Chart</div>}
+           data={[
+             ['Task', 'Hours per Day'],
+             [lang.lang1, lang.lang1_val],
+             [lang.lang2, lang.lang2_val],
+             [lang.lang3, lang.lang3_val],
+             [lang.lang4, lang.lang4_val],
+             [lang.lang5, lang.lang5_val],
+           ]}
+           options={{
+             title: 'Language Distribution across the Tweets',
+             // Just add this option
+             is3D: true,
+           }}
+           rootProps={{ 'data-testid': '2' }}
+         />
+            )
+            
+        } 
+            </Col>
+            <Col xs={6} md={4}>
+            {            
+            this.state.visdata.map( (lang , i ) =>            
+            <Chart
+           width={'250px'}
+           height={'250px'}
+           chartType="PieChart"
+           loader={<div>Loading Chart</div>}
+           data={[
+             ['Task', 'Hours per Day'],
+             ['Positive', lang.Positive],
+             ['Negative', lang.Negative],
+             ['Neutral', lang.Neutral],
+            
+           ]}
+           options={{
+             title: 'Sentimental Analysis across the Tweets',
+             // Just add this option
+             is3D: true,
+           }}
+           rootProps={{ 'data-testid': '2' }}
+         />
+            )
+            
+        }
+            </Col>
+           
+          <Col xs={6} md={4}>
+            {
+            this.state.visdata.map( (TypeofUsers , i ) =>            
+            <Chart
+           width={'250px'}
+           height={'250px'}
+           chartType="PieChart"
+           loader={<div>Loading Chart</div>}
+           data={[
+             ['Task', 'Hours per Day'],
+             ['Verified', TypeofUsers.V],
+            ['Not Verified', TypeofUsers.NV],
+             
+           ]}
+           options={{
+             title: 'Verified vs Non Verified  Users',
+             // Just add this option
+             is3D: true,
+           }}
+           rootProps={{ 'data-testid': '2' }}
+         />
+            )
+            
+        } 
+           </Col>
+           </Row>
+
+          <Row className="show-grid">
+          {            
+            this.state.visdata.map( (hashtags , i ) => 
+            <Chart
+          chartType="ColumnChart"
+          loader={<div>Loading Chart</div>}
+          width="100%"
+          height="300px"
+          data={[
+            ["Element", "Hashtag Count", { role: "style" }],
+            [hashtags.Hash1, hashtags.Hash1_val, "#b87333"], // RGB value
+            [hashtags.Hash2, hashtags.Hash2_val, "silver"], // English color name
+            [hashtags.Hash3, hashtags.Hash3_val, "gold"],
+            [hashtags.Hash4, hashtags.Hash4_val, "black"], // CSS-style declaration
+            [hashtags.Hash5, hashtags.Hash5_val, "red"], 
+            [hashtags.Hash6, hashtags.Hash6_val, "#b87333"], 
+            [hashtags.Hash7, hashtags.Hash7_val, "green"], 
+            [hashtags.Hash8, hashtags.Hash8_val, "blue"], 
+            [hashtags.Hash9, hashtags.Hash9_val, "lightblue"], 
+            [hashtags.Hash10, hashtags.Hash10_val, "grey"]
+
+          ]}
+          options={{
+            title: 'Trending #Hashtags',
+            
+          }}
+        />
+            )
+        }
+          </Row>
+
+          <Row className="show-grid">
+          {            
+            this.state.visdata.map( (Countries , i ) => 
+            <Chart
+            width={'500px'}
+            height={'300px'}
+            chartType="GeoChart"
+            options={{
+                title: 'Geo Tagging of Tweets'                
+              }}
+            data={[
+                ['Country', 'Popularity'],
+                [Countries.Country1, Countries.Country1_val],
+                ['United States', Countries.Country2_val],
+                [Countries.Country3, Countries.Country3_val]
+                
+            ]}
+            
+            // Note: you will need to get a mapsApiKey for your project.
+            // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+            
+            rootProps={{ 'data-testid': '1' }}
+            />
+            )}
+          </Row>
+
+          
+        </Container>
+        </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={this.hideModal}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+   </div>
+
+   <div >
+
+        <Modal
+        
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={this.state.static}
+        onHide={this.hideStaticModal}
+      >
+         
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Analytics and Visualization
+          </Modal.Title>
+          
+        </Modal.Header>
+        <Modal.Body>
+        <Container>
+          
+            <row xs={12} md={12}>
+                {            
+            this.state.StaticVisualData.map( (lang , i ) =>            
+            <Chart
+           width={'500px'}
+           height={'300px'}
+           chartType="PieChart"
+           loader={<div>Loading Chart</div>}
+           data={[
+             ['Task', 'Hours per Day'],
+             [lang.lang1, lang.lang1_val],
+             [lang.lang2, lang.lang2_val],
+             [lang.lang3, lang.lang3_val],
+             [lang.lang4, lang.lang4_val],
+             [lang.lang5, lang.lang5_val],
+           ]}
+           options={{
+             title: 'Language Distribution across the Tweets',
+             // Just add this option
+             is3D: true,
+           }}
+           rootProps={{ 'data-testid': '2' }}
+         />
+            )
+            
+        }
+            </row>
+            
+            <row xs={12} md={12}>
+            {            
+            this.state.StaticVisualData.map( (hashtags , i ) => 
+            <Chart
+          chartType="ColumnChart"
+          loader={<div>Loading Chart</div>}
+          width="100%"
+          height="300px"
+          data={[
+            ["Element", "Hashtag Count", { role: "style" }],
+            [hashtags.Hash1, hashtags.Hash1_val, "#b87333"], // RGB value
+            [hashtags.Hash2, hashtags.Hash2_val, "silver"], // English color name
+            [hashtags.Hash3, hashtags.Hash3_val, "gold"],
+            [hashtags.Hash4, hashtags.Hash4_val, "black"], // CSS-style declaration
+            [hashtags.Hash5, hashtags.Hash5_val, "red"], 
+            [hashtags.Hash6, hashtags.Hash6_val, "#b87333"], 
+            [hashtags.Hash7, hashtags.Hash7_val, "green"], 
+            [hashtags.Hash8, hashtags.Hash8_val, "blue"], 
+            [hashtags.Hash9, hashtags.Hash9_val, "lightblue"], 
+            [hashtags.Hash10, hashtags.Hash10_val, "grey"]
+
+          ]}
+          options={{
+            title: 'Trending #Hashtags',
+            
+          }}
+        />
+            )
+        }
+        
+            </row>
+          
+
+         
+            <row xs={12} md={12}>
+
+            {            
+            this.state.StaticVisualData.map( (TypeofUsers , i ) => 
+            <Chart
+  width={'500px'}
+  height={'300px'}
+  chartType="BarChart"
+  loader={<div>Loading Chart</div>}
+  data={[
+    [
+      'Element',
+      'Density',
+      { role: 'style' },
+      {
+        sourceColumn: 0,
+        role: 'annotation',
+        type: 'string',
+        calc: 'stringify',
+      },
+    ],
+    
+    ['Verified', TypeofUsers.V, 'Blue', null],
+    ['Not Verified', TypeofUsers.NV, 'Red', null],
+   
+  ]}
+  options={{
+    title: 'Verified and Non Verified Users',
+    width: 600,
+    height: 200,
+    bar: { groupWidth: '95%' },
+    legend: { position: 'none' },
+  }}
+  // For tests
+  rootProps={{ 'data-testid': '6' }}
+/>
+            )
+}
+            </row> 
+            <row xs={12} md={12}>
+                
+            {            
+            this.state.StaticVisualData.map( (Countries , i ) => 
+            <Chart
+            width={'500px'}
+            height={'300px'}
+            chartType="GeoChart"
+            options={{
+                title: 'Geo Tagging of Tweets'                
+              }}
+            data={[
+                ['Country', 'Popularity'],
+                [Countries.Country1, Countries.Country1_val],
+                ['United States', Countries.Country2_val],
+                [Countries.Country3, Countries.Country3_val]
+                
+            ]}
+            
+            // Note: you will need to get a mapsApiKey for your project.
+            // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+            
+            rootProps={{ 'data-testid': '1' }}
+            />
+            )}
+            </row>           
+          
+        </Container>
+          
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={this.hideStaticModal}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+   </div>
+
+                 
+        </div>
+    </div>
+</div>  
+</div>  
+
+
+    <div >
+
+    <div class="container" >
+    <div class="row">    
+{
+            this.state.tweet.map( Tweet=>
+               
+               <div class="col-sm">
+               <div class="card" style={divStyle} >
+           
+           <div style={outer}> 
+           <img  src= { Tweet["user.profile_image_url"]} class="card-img-top" alt="..."  style ={imageStyle}></img>
+           <blink><p style ={inner}> {Tweet.setiment}</p></blink>
+            
+
+           </div>
+
+           <div class="card-body" style={bodyStyle} >
+             <h5 class="card-title">  {Tweet["user.name"]} </h5>  
+             <p class="card-text" > { Tweet.full_text}.</p>
+           </div>
+            <div class ="card-body" align="center">
+                <a href= { "https://twitter.com/" + Tweet.poi_name + "/status/" + Tweet.id  } class="btn btn-primary">Jump to Twitter! </a>
+            </div>
+            </div>
+            <br></br>
+                </div>             
+            )
+}
+        
+        </div>
+        </div>      
+            
+    </div>
+</div>  
+
+    )
+
+}
+}
+
+export default Filters;
+
+
+
+
+
