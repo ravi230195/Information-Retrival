@@ -13,7 +13,7 @@
     "react-google-charts": "^3.0.15",
     "react-loading-bar": "0.0.7",
     "react-minimal-pie-chart": "^5.0.2",
-    "react-native": "^0.61.5",
+    "react-native": "^0.62.3",
     "react-redux-loading-bar": "^4.5.0",
     "react-scripts": "3.2.0",
     "react-spinners": "^0.6.1",
